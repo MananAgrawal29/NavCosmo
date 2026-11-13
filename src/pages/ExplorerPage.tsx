@@ -55,7 +55,7 @@ export default function ExplorerPage() {
         <Card>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <SectionHeader title={selected.name} subtitle={selected.region} />
-            <span className="rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs text-accent">
+            <span className="rounded-[2px] border border-border-strong bg-hover px-2.5 py-1 text-xs text-text">
               Selected candidate
             </span>
           </div>
@@ -85,7 +85,7 @@ export default function ExplorerPage() {
             </div>
           </dl>
 
-          <div className="mt-5 rounded-lg border border-dashed border-border bg-panel p-3 text-xs leading-5 text-muted">
+          <div className="mt-5 rounded-[2px] border border-border border-l-2 border-l-warning bg-panel p-3 text-xs leading-5 text-muted">
             Marker positions are approximate candidate coordinates derived from latitude and
             longitude. They are not precise landing-site survey coordinates.
           </div>
@@ -93,14 +93,14 @@ export default function ExplorerPage() {
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
               to={`/analysis?site=${selected.id}`}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-space transition hover:bg-accent/90"
+              className="inline-flex min-h-11 items-center gap-2 rounded-[2px] bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:bg-accent/90"
             >
               Explore detailed terrain
             </Link>
             <button
               type="button"
               onClick={() => setResetSignal((value) => value + 1)}
-              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+              className="inline-flex min-h-11 items-center gap-2 rounded-[2px] border border-border px-3 py-2 text-sm text-text transition hover:border-border-strong hover:bg-hover"
             >
               <RotateCcw className="h-4 w-4" />
               Return to global Moon view

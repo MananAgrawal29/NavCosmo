@@ -33,8 +33,8 @@ export default function SimulationTimeline({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-muted">Simulation timeline</p>
-          <p className={`mt-0.5 font-mono text-text ${compact ? 'text-lg' : 'text-xl'}`}>
+          <p className="text-xs text-muted">Simulation timeline</p>
+          <p className={`mt-0.5 tabular-nums text-text ${compact ? 'text-lg' : 'text-xl'}`}>
             {simulation.timeHours.toFixed(1)} h
             <span className="ml-2 text-sm text-muted">/ {LUNAR_CYCLE_HOURS} h</span>
           </p>
@@ -43,7 +43,7 @@ export default function SimulationTimeline({
           <button
             type="button"
             onClick={() => setPlaying(!playing)}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-space transition hover:bg-accent/90"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[2px] bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:bg-accent/90"
           >
             {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             {playing ? 'Pause' : 'Play'}
@@ -51,7 +51,7 @@ export default function SimulationTimeline({
           <button
             type="button"
             onClick={resetSimulation}
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[2px] border border-border px-3 py-2 text-sm text-text transition hover:border-border-strong hover:bg-hover"
           >
             <RotateCcw className="h-4 w-4" />
             Reset
@@ -63,10 +63,10 @@ export default function SimulationTimeline({
                 key={option}
                 type="button"
                 onClick={() => setSpeed(option)}
-                className={`rounded-md border px-2 py-1 text-xs transition ${
+                className={`inline-flex min-h-11 items-center rounded-[2px] border px-2 py-1 text-xs transition ${
                   speed === option
-                    ? 'border-accent bg-accent/15 text-accent'
-                    : 'border-border text-muted hover:text-text'
+                    ? 'border-border-strong bg-hover text-text'
+                    : 'border-border text-muted hover:bg-hover hover:text-text'
                 }`}
               >
                 {option}×
@@ -86,9 +86,9 @@ export default function SimulationTimeline({
           onChange={(event) => setTimeFraction(Number(event.target.value) / 1000)}
           aria-label="Simulation time"
           className="w-full cursor-pointer"
-          style={{ accentColor: '#66B8FF' }}
+          style={{ accentColor: 'var(--color-accent)' }}
         />
-        <div className="mt-1 flex justify-between text-[10px] uppercase tracking-wide text-muted">
+        <div className="mt-1 flex justify-between text-xs text-muted">
           <span>Sunrise</span>
           <span>Noon</span>
           <span>Sunset</span>

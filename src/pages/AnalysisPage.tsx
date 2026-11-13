@@ -6,10 +6,10 @@ import { lunarSites, getSiteById } from '../data/lunarSites'
 import { getSiteProfile, type SuitabilityStatus } from '../data/siteProfiles'
 
 const statusStyles: Record<SuitabilityStatus, string> = {
-  Promising: 'border-accent2/40 bg-accent2/10 text-accent2',
-  Conditional: 'border-amber-400/40 bg-amber-400/10 text-amber-200',
-  Challenging: 'border-rose-400/40 bg-rose-400/10 text-rose-200',
-  'Requires further data': 'border-accent/40 bg-accent/10 text-accent',
+  Promising: 'text-text',
+  Conditional: 'text-muted',
+  Challenging: 'text-warning',
+  'Requires further data': 'text-muted',
 }
 
 export default function AnalysisPage() {
@@ -25,7 +25,7 @@ export default function AnalysisPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-accent">
+          <p className="text-xs text-muted">
             Detailed site exploration
           </p>
           <h1 className="mt-2 text-3xl font-bold text-text">{selected.name}</h1>
@@ -36,7 +36,7 @@ export default function AnalysisPage() {
         </div>
         <Link
           to={`/explorer?site=${selected.id}`}
-          className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+          className="inline-flex min-h-11 items-center gap-2 rounded-[2px] border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-border-strong hover:bg-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Global Moon
@@ -51,8 +51,8 @@ export default function AnalysisPage() {
             onClick={() => selectSite(site.id)}
             className={`rounded-xl border px-4 py-2 text-sm transition ${
               site.id === selected.id
-                ? 'border-accent bg-accent/15 text-accent'
-                : 'border-border bg-card text-muted hover:border-accent/30 hover:text-text'
+                ? 'border-border-strong bg-hover text-text'
+                : 'border-border bg-card text-muted hover:border-border-strong hover:bg-hover hover:text-text'
             }`}
           >
             {site.name}
@@ -63,8 +63,8 @@ export default function AnalysisPage() {
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
         <div className="space-y-4">
           <TerrainViewer siteId={selected.id} siteName={selected.name} />
-          <div className="rounded-xl border border-dashed border-amber-400/30 bg-card p-3 text-xs leading-5 text-muted">
-            <p className="font-medium text-amber-200/80">Illustrative terrain visualization</p>
+          <div className="rounded-[2px] border border-border border-l-2 border-l-warning bg-card p-3 text-xs leading-5 text-muted">
+            <p className="font-medium text-warning">Illustrative terrain visualization</p>
             <p className="mt-1">
               This surface is procedurally generated to demonstrate the exploration interface. It
               is not a digital elevation model, slope map, hazard map, or NASA observation. High
@@ -76,7 +76,7 @@ export default function AnalysisPage() {
         <Card>
           <SectionHeader title={selected.name} subtitle={selected.region} />
           <div className="flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs text-muted">
-            <MapPin className="h-3.5 w-3.5 text-accent" />
+            <MapPin className="h-3.5 w-3.5 text-muted" />
             {selected.latitude.toFixed(1)}°, {selected.longitude.toFixed(1)}° · approximate candidate
           </div>
           <p className="mt-4 text-sm leading-6 text-text">{selected.description}</p>
@@ -93,7 +93,7 @@ export default function AnalysisPage() {
 
           <Link
             to={`/explorer?site=${selected.id}`}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-border px-3 py-2 text-sm text-text transition hover:border-border-strong hover:bg-hover"
           >
             Return to global 3D Moon
           </Link>
@@ -151,11 +151,11 @@ export default function AnalysisPage() {
         <SectionHeader title="Terrain data status" subtitle="Scientific integrity note" />
         <div className="grid gap-3 text-sm text-muted md:grid-cols-3">
           <div className="rounded-lg border border-dashed border-border bg-panel p-3">
-            <p className="text-xs uppercase tracking-wide text-amber-200/80">Data unavailable</p>
+            <p className="text-xs text-warning">Data unavailable</p>
             <p className="mt-1">Site-specific LROC stereo imagery and LOLA elevation products are not integrated.</p>
           </div>
           <div className="rounded-lg border border-dashed border-border bg-panel p-3">
-            <p className="text-xs uppercase tracking-wide text-accent">Illustrative visualization</p>
+            <p className="text-xs text-muted">Illustrative visualization</p>
             <p className="mt-1">Terrain geometry and colors are procedural demonstrations of the intended analysis workflow.</p>
           </div>
           <div className="rounded-lg border border-dashed border-border bg-panel p-3">

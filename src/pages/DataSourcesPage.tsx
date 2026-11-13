@@ -6,19 +6,19 @@ export default function DataSourcesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs font-medium uppercase tracking-widest text-accent">Transparency</p>
-        <h1 className="mt-2 text-3xl font-bold text-text">Data & Sources</h1>
+        <p className="text-xs text-muted">Transparency</p>
+        <h1 className="mt-2 font-display text-3xl font-normal text-text">Data & Sources</h1>
         <p className="mt-2 max-w-3xl text-muted">
           NavCosmo combines attributed public lunar imagery with clearly marked illustrative and
           simulated layers. These categories are not interchangeable.
         </p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+      <div className="grid gap-x-8 gap-y-2 lg:grid-cols-2">
+        <Card className="border-0 border-t border-border bg-transparent p-0 pt-5">
           <SectionHeader title="Authentic NASA imagery" subtitle="Global lunar globe" />
           <div className="flex items-start gap-3 text-sm leading-6 text-muted">
-            <Moon className="mt-1 h-4 w-4 shrink-0 text-accent" />
+            <Moon className="mt-1 h-4 w-4 shrink-0 text-muted" />
             <p>
               The global Moon uses the NASA Scientific Visualization Studio CGI Moon Kit color map
               and LOLA-derived relief texture, based on LRO LROC and LOLA data.
@@ -28,17 +28,17 @@ export default function DataSourcesPage() {
             href="https://svs.gsfc.nasa.gov/4720/"
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-xs text-accent hover:text-accent/80"
+            className="mt-4 inline-flex items-center gap-2 text-xs text-muted underline decoration-border-strong underline-offset-4 transition hover:text-text"
           >
             NASA SVS CGI Moon Kit
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </Card>
 
-        <Card>
+        <Card className="border-0 border-t border-border bg-transparent p-0 pt-5">
           <SectionHeader title="Illustrative site terrain" subtitle="Surface and sunlight modes" />
           <div className="flex items-start gap-3 text-sm leading-6 text-muted">
-            <Database className="mt-1 h-4 w-4 shrink-0 text-amber-200" />
+            <Database className="mt-1 h-4 w-4 shrink-0 text-muted" />
             <p>
               Site terrain is procedurally generated for interface demonstration. It is not a
               digital elevation model, hazard map, or authentic Shackleton/Malapert observation.
@@ -46,10 +46,10 @@ export default function DataSourcesPage() {
           </div>
         </Card>
 
-        <Card>
+        <Card className="border-0 border-t border-border bg-transparent p-0 pt-5">
           <SectionHeader title="Simplified solar model" subtitle="Sunlight Lab" />
           <div className="flex items-start gap-3 text-sm leading-6 text-muted">
-            <Sun className="mt-1 h-4 w-4 shrink-0 text-amber-200" />
+            <Sun className="mt-1 h-4 w-4 shrink-0 text-solar" />
             <p>
               Sun elevation follows a sinusoidal 29.53-day cycle. Azimuth rotates once per cycle.
               No lunar ephemeris, libration, or local horizon model is used. Site-specific maximum
@@ -59,7 +59,7 @@ export default function DataSourcesPage() {
           </div>
         </Card>
 
-        <Card>
+        <Card className="border-0 border-t border-border bg-transparent p-0 pt-5">
           <SectionHeader title="Candidate coordinates" subtitle="Approximate only" />
           <p className="text-sm leading-6 text-muted">
             Shackleton Crater and Malapert Massif markers use approximate candidate coordinates,
@@ -71,7 +71,7 @@ export default function DataSourcesPage() {
 
       <Link
         to="/workspace"
-        className="inline-flex rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+        className="inline-flex min-h-11 items-center rounded-[2px] border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-border-strong hover:bg-hover"
       >
         Return to Mission Workspace
       </Link>

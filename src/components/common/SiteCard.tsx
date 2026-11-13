@@ -1,5 +1,4 @@
 import type { LunarSite } from '../../types/lunarSite'
-import { Card } from './Card'
 
 interface SiteCardProps {
   site: LunarSite
@@ -12,23 +11,21 @@ export default function SiteCard({ site, selected = false, onSelect }: SiteCardP
     <button
       type="button"
       onClick={() => onSelect?.(site.id)}
-      className={`w-full text-left ${onSelect ? 'cursor-pointer' : 'cursor-default'}`}
+      className={`w-full border-t border-border px-1 py-4 text-left transition ${
+        selected ? 'border-l-[3px] border-l-accent pl-3' : 'hover:border-border-strong hover:bg-hover'
+      } ${onSelect ? 'cursor-pointer' : 'cursor-default'}`}
     >
-      <Card
-        className={`transition ${selected ? 'border-accent ring-1 ring-accent/40' : 'hover:border-accent/40'}`}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-semibold text-text">{site.name}</h3>
-            <p className="mt-1 text-sm text-accent2">{site.region}</p>
-          </div>
-          <span className="rounded-full border border-border px-2.5 py-1 text-xs text-muted">
-            Candidate
-          </span>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-display text-xl font-normal text-text">{site.name}</h3>
+          <p className="mt-1 text-xs text-muted">{site.region}</p>
         </div>
-        <p className="mt-3 text-sm leading-6 text-muted">{site.description}</p>
-        <p className="mt-3 text-sm text-text/80">{site.scientificSignificance}</p>
-      </Card>
+        <span className="text-xs tabular-nums text-muted">
+          {site.latitude.toFixed(1)}°, {site.longitude.toFixed(1)}°
+        </span>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-muted">{site.description}</p>
+      <p className="mt-3 text-sm leading-6 text-text/80">{site.scientificSignificance}</p>
     </button>
   )
 }

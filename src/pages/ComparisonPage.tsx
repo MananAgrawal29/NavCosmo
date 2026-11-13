@@ -71,7 +71,7 @@ export default function ComparisonPage() {
             <h3 className="text-lg font-semibold text-text">{site.name}</h3>
             <div className="mt-3 grid gap-4 sm:grid-cols-2">
               <div>
-                <p className="text-xs uppercase tracking-wide text-accent2">Advantages</p>
+                <p className="text-xs text-muted">Advantages</p>
                 <ul className="mt-2 space-y-1 text-sm text-muted">
                   {site.advantages.map((item) => (
                     <li key={item}>• {item}</li>
@@ -79,7 +79,7 @@ export default function ComparisonPage() {
                 </ul>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-rose-300">Limitations</p>
+                <p className="text-xs text-warning">Limitations</p>
                 <ul className="mt-2 space-y-1 text-sm text-muted">
                   {site.limitations.map((item) => (
                     <li key={item}>• {item}</li>

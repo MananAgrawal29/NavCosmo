@@ -191,6 +191,8 @@ interface TerrainViewerProps {
   onModeChange?: (mode: TerrainMode) => void
   height?: string
   className?: string
+  hudInsetLeft?: number
+  hudInsetRight?: number
 }
 
 export default function TerrainViewer({
@@ -204,6 +206,8 @@ export default function TerrainViewer({
   onModeChange,
   height = 'clamp(380px, 46vw, 520px)',
   className = '',
+  hudInsetLeft = 12,
+  hudInsetRight = 12,
 }: TerrainViewerProps) {
   const [internalMode, setInternalMode] = useState<TerrainMode>('natural')
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
@@ -224,14 +228,14 @@ export default function TerrainViewer({
     : null
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-border bg-panel ${className}`}>
+    <div className={`relative overflow-hidden rounded-[2px] border border-border bg-panel ${className}`}>
       <div style={{ height }} className="w-full">
         <Canvas
           camera={{ position: [4.6, 4.0, 5.4], fov: 38, near: 0.1, far: 50 }}
           dpr={[1, 1.5]}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
         >
-          <color attach="background" args={['#070B14']} />
+          <color attach="background" args={['#08090B']} />
           <ambientLight intensity={ambientIntensity} />
           <directionalLight
             position={lightPosition}
@@ -264,57 +268,67 @@ export default function TerrainViewer({
         </Canvas>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-2">
-        <div className="pointer-events-auto flex flex-wrap gap-1 rounded-xl border border-border bg-space/85 p-1 backdrop-blur">
-          {modeLabels.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => changeMode(item.id)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                mode === item.id
-                  ? 'bg-accent text-space'
-                  : 'text-muted hover:bg-card hover:text-text'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+      <div
+        className="pointer-events-none absolute top-3 flex flex-wrap items-start justify-between gap-2"
+        style={{ left: hudInsetLeft, right: hudInsetRight }}
+      >
+        <div className="flex flex-col items-start gap-2">
+          <div className="pointer-events-auto flex flex-wrap gap-1 rounded-[2px] border border-border bg-panel p-1">
+            {modeLabels.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => changeMode(item.id)}
+                aria-pressed={mode === item.id}
+                className={`inline-flex min-h-11 items-center rounded-[2px] px-3 py-2 text-xs font-medium transition ${
+                  mode === item.id
+                    ? 'bg-accent text-on-accent'
+                    : 'text-muted hover:text-text'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          {sunDirection && sunElevation !== null && sunAzimuth !== null ? (
+            <div className="flex items-center gap-2 rounded-[2px] border border-solar/40 bg-space px-2.5 py-2 text-xs text-solar">
+              <span className="relative block h-5 w-5 rounded-full border border-solar/50">
+                <span
+                  className="absolute left-1/2 top-1/2 h-px w-2 origin-left bg-solar"
+                  style={{ transform: `rotate(${sunAzimuth}deg)` }}
+                />
+                <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-solar" />
+              </span>
+              <span>Sun</span>
+              <span className="tabular-nums">
+                {sunAzimuth.toFixed(0)}° AZ · {sunElevation >= 0 ? '+' : ''}
+                {sunElevation.toFixed(1)}° EL
+              </span>
+            </div>
+          ) : null}
         </div>
+
         <button
           type="button"
           onClick={() => controlsRef.current?.reset()}
           aria-label="Reset terrain camera"
           title="Reset terrain camera"
-          className="pointer-events-auto rounded-lg border border-border bg-space/80 p-2 text-muted backdrop-blur transition hover:border-accent/50 hover:text-accent"
+          className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-panel text-muted transition hover:border-border-strong hover:bg-hover hover:text-text"
         >
           <RotateCcw className="h-4 w-4" />
         </button>
       </div>
 
-      {sunDirection && sunElevation !== null && sunAzimuth !== null ? (
-        <div className="pointer-events-none absolute left-3 top-[64px] flex items-center gap-2 rounded-lg border border-amber-300/30 bg-space/80 px-2.5 py-1.5 text-[10px] text-amber-100/90 backdrop-blur">
-          <span className="relative block h-5 w-5 rounded-full border border-amber-300/40">
-            <span
-              className="absolute left-1/2 top-1/2 h-px w-2 origin-left bg-amber-200"
-              style={{ transform: `rotate(${sunAzimuth}deg)` }}
-            />
-            <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200" />
-          </span>
-          <span>Sun</span>
-          <span className="font-mono">
-            {sunAzimuth.toFixed(0)}° AZ · {sunElevation >= 0 ? '+' : ''}
-            {sunElevation.toFixed(1)}° EL
-          </span>
-        </div>
-      ) : null}
-
-      <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-end justify-between gap-2">
-        <div className="rounded-md border border-border bg-space/80 px-3 py-1.5 text-xs text-muted backdrop-blur">
-          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent2" />
+      <div
+        className="pointer-events-none absolute bottom-3 flex flex-wrap items-end justify-between gap-2"
+        style={{ left: hudInsetLeft, right: hudInsetRight }}
+      >
+        <div className="rounded-[2px] border border-border bg-panel px-3 py-2 text-xs text-muted">
+          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-faint" />
           {siteName} · {activeMode.label} view · {activeMode.legend}
         </div>
-        <div className="rounded-md border border-dashed border-amber-400/40 bg-space/80 px-2.5 py-1.5 text-[10px] text-amber-200/80 backdrop-blur">
+        <div className="rounded-[2px] border-l-2 border-warning bg-panel px-2.5 py-2 text-xs text-warning">
           Illustrative terrain — not a DEM or NASA measurement
         </div>
       </div>
