@@ -126,6 +126,31 @@ function SunIndicator({ direction }: { direction: [number, number, number] }) {
   )
 }
 
+function ViewportSync() {
+  const { gl, camera, invalidate } = useThree()
+
+  useEffect(() => {
+    const sync = () => {
+      const parent = gl.domElement.parentElement
+      if (!parent) return
+      const width = parent.clientWidth
+      const height = parent.clientHeight
+      if (!width || !height) return
+      gl.setSize(width, height, false)
+      if (camera instanceof THREE.PerspectiveCamera) {
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
+      }
+      invalidate()
+    }
+
+    const timers = [50, 250, 800].map((delay) => window.setTimeout(sync, delay))
+    return () => timers.forEach((timer) => window.clearTimeout(timer))
+  }, [gl, camera, invalidate])
+
+  return null
+}
+
 function ShadowUpdater({
   enabled,
   sunDirection,
@@ -154,6 +179,10 @@ interface TerrainViewerProps {
   sunIntensity?: number
   ambientIntensity?: number
   shadows?: boolean
+  mode?: TerrainMode
+  onModeChange?: (mode: TerrainMode) => void
+  height?: string
+  className?: string
 }
 
 export default function TerrainViewer({
@@ -163,10 +192,19 @@ export default function TerrainViewer({
   sunIntensity = 2.2,
   ambientIntensity = 0.42,
   shadows = false,
+  mode: controlledMode,
+  onModeChange,
+  height = 'clamp(380px, 46vw, 520px)',
+  className = '',
 }: TerrainViewerProps) {
-  const [mode, setMode] = useState<TerrainMode>('natural')
+  const [internalMode, setInternalMode] = useState<TerrainMode>('natural')
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
+  const mode = controlledMode ?? internalMode
   const activeMode = modeLabels.find((item) => item.id === mode) ?? modeLabels[0]
+  const changeMode = (nextMode: TerrainMode) => {
+    onModeChange?.(nextMode)
+    if (controlledMode === undefined) setInternalMode(nextMode)
+  }
   const lightPosition: [number, number, number] = sunDirection
     ? [sunDirection[0] * 8, sunDirection[1] * 8, sunDirection[2] * 8]
     : [4, 6, 3]
@@ -178,8 +216,8 @@ export default function TerrainViewer({
     : null
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-panel">
-      <div style={{ height: 'clamp(380px, 46vw, 520px)' }} className="w-full">
+    <div className={`relative overflow-hidden rounded-2xl border border-border bg-panel ${className}`}>
+      <div style={{ height }} className="w-full">
         <Canvas
           camera={{ position: [4.6, 4.0, 5.4], fov: 38, near: 0.1, far: 50 }}
           dpr={[1, 1.5]}
@@ -204,6 +242,7 @@ export default function TerrainViewer({
           <TerrainMesh siteId={siteId} mode={mode} shadows={shadows} />
           {sunDirection ? <SunIndicator direction={sunDirection} /> : null}
           <ShadowUpdater enabled={shadows} sunDirection={sunDirection} />
+          <ViewportSync />
           <OrbitControls
             ref={controlsRef}
             makeDefault
@@ -223,7 +262,7 @@ export default function TerrainViewer({
             <button
               key={item.id}
               type="button"
-              onClick={() => setMode(item.id)}
+              onClick={() => changeMode(item.id)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                 mode === item.id
                   ? 'bg-accent text-space'

@@ -1,12 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Globe2, BarChart3, Scale, Moon, Sun } from 'lucide-react'
+import { LayoutDashboard, Database, Info, Moon } from 'lucide-react'
 
 const navItems = [
-  { to: '/', label: 'Overview', icon: LayoutDashboard },
-  { to: '/explorer', label: 'Lunar Explorer', icon: Globe2 },
-  { to: '/analysis', label: 'Site Analysis', icon: BarChart3 },
-  { to: '/simulator', label: 'Sunlight Simulator', icon: Sun },
-  { to: '/comparison', label: 'Site Comparison', icon: Scale },
+  { to: '/workspace', label: 'Mission Workspace', icon: LayoutDashboard },
+  { to: '/sources', label: 'Data & Sources', icon: Database },
+  { to: '/about', label: 'About NavCosmo', icon: Info },
 ]
 
 export default function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -39,7 +37,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === '/'}
+                end={item.to === '/workspace'}
                 onClick={onClose}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
@@ -57,7 +55,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
         </nav>
         <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted">NASA Space Apps Challenge 2026</p>
-          <p className="mt-1 text-sm text-text">P03 sunlight simulator</p>
+          <p className="mt-1 text-sm text-text">P04 unified workspace</p>
         </div>
       </aside>
     </>

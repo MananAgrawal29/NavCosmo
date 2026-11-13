@@ -255,6 +255,7 @@ interface MoonViewerProps {
   selectedSiteId?: string | null
   onSiteSelect?: (siteId: string) => void
   resetSignal?: number
+  className?: string
 }
 
 export default function MoonViewer({
@@ -263,6 +264,7 @@ export default function MoonViewer({
   selectedSiteId,
   onSiteSelect,
   resetSignal,
+  className = '',
 }: MoonViewerProps) {
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
   const moonRef = useRef<THREE.Mesh | null>(null)
@@ -306,7 +308,7 @@ export default function MoonViewer({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-panel">
+    <div className={`relative overflow-hidden rounded-2xl border border-border bg-panel ${className}`}>
       <div style={{ height }} className="w-full">
         <Canvas
           camera={{ position: INITIAL_CAMERA.toArray(), fov: 40, near: 0.1, far: 200 }}

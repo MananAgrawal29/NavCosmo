@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Sidebar from './Sidebar'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+  const location = useLocation()
+  const isWorkspace = location.pathname.startsWith('/workspace')
 
   return (
     <div className="min-h-screen bg-space text-text">
@@ -28,7 +31,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Desktop-first preview
           </span>
         </header>
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-8 md:py-8">{children}</main>
+        <main className={isWorkspace ? 'w-full p-0' : 'mx-auto w-full max-w-7xl px-4 py-6 md:px-8 md:py-8'}>
+          {children}
+        </main>
       </div>
     </div>
   )
