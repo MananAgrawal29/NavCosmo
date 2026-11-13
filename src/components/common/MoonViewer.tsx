@@ -1,10 +1,11 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Html, OrbitControls, Stars, useTexture } from '@react-three/drei'
+import { Html, OrbitControls, useTexture } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
 import { Minus, Plus, RotateCcw } from 'lucide-react'
+import CosmicEnvironment from './CosmicEnvironment'
 import { lunarSites } from '../../data/lunarSites'
 import type { LunarSite } from '../../types/lunarSite'
 import { latLonToVector3 } from '../../utils/lunarCoordinates'
@@ -78,7 +79,7 @@ function SiteMarker({ site, position, selected, onSelect, moonRef }: SiteMarkerP
     }
   })
 
-  const markerColor = selected ? '#66B8FF' : '#45E0D0'
+  const markerColor = selected ? '#F2F2F3' : '#C9C9CF'
 
   return (
     <group position={position} quaternion={quaternion}>
@@ -142,16 +143,15 @@ function SiteMarker({ site, position, selected, onSelect, moonRef }: SiteMarkerP
             type="button"
             onClick={() => onSelect(site)}
             onPointerDown={(event) => event.stopPropagation()}
-            className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border font-semibold shadow-lg backdrop-blur transition ${
-              selected
-                ? 'border-accent bg-accent text-space'
-                : 'border-accent2/50 bg-space/90 text-text hover:border-accent hover:text-accent'
+            className={`flex min-h-11 items-center gap-2 whitespace-nowrap rounded-[2px] border border-border bg-space/85 px-2 py-2 text-xs transition ${
+              selected ? 'text-accent' : 'text-muted hover:text-text'
             }`}
-            style={{ pointerEvents: 'auto', fontSize: 10, lineHeight: 1.4, padding: '4px 8px' }}
+            style={{ pointerEvents: 'auto' }}
           >
             <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                selected ? 'bg-space' : 'bg-accent2'
+              aria-hidden="true"
+              className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                selected ? 'bg-accent' : 'bg-muted'
               }`}
             />
             {site.name}
@@ -256,6 +256,8 @@ interface MoonViewerProps {
   onSiteSelect?: (siteId: string) => void
   resetSignal?: number
   className?: string
+  hudInsetLeft?: number
+  hudInsetRight?: number
 }
 
 export default function MoonViewer({
@@ -265,6 +267,8 @@ export default function MoonViewer({
   onSiteSelect,
   resetSignal,
   className = '',
+  hudInsetLeft = 12,
+  hudInsetRight = 12,
 }: MoonViewerProps) {
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
   const moonRef = useRef<THREE.Mesh | null>(null)
@@ -315,14 +319,14 @@ export default function MoonViewer({
   }
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-border bg-panel ${className}`}>
+    <div className={`relative overflow-hidden rounded-[2px] border border-border bg-panel ${className}`}>
       <div style={{ height }} className="w-full">
         <Canvas
           camera={{ position: INITIAL_CAMERA.toArray(), fov: 40, near: 0.1, far: 200 }}
           dpr={[1, 1.5]}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
         >
-          <color attach="background" args={['#070B14']} />
+          <color attach="background" args={['#08090B']} />
           <ambientLight intensity={0.28} />
           <directionalLight position={[5, 2.5, 4]} intensity={2.2} />
           <Suspense fallback={null}>
@@ -332,7 +336,7 @@ export default function MoonViewer({
               onSelect={handleMarkerSelect}
               moonRef={moonRef}
             />
-            <Stars radius={80} depth={30} count={1800} factor={2} saturation={0} fade speed={0.25} />
+            <CosmicEnvironment />
           </Suspense>
           <OrbitControls
             ref={controlsRef}
@@ -349,18 +353,17 @@ export default function MoonViewer({
         </Canvas>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between gap-3">
-        <div className="pointer-events-auto rounded-full border border-border bg-space/70 px-3 py-1.5 text-xs text-muted backdrop-blur">
-          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent2" />
-          Interactive lunar globe
-        </div>
+      <div
+        className="pointer-events-none absolute top-3 flex items-start justify-end gap-3"
+        style={{ left: hudInsetLeft, right: hudInsetRight }}
+      >
         <div className="pointer-events-auto flex flex-col gap-1.5">
           <button
             type="button"
             onClick={() => handleZoom(1)}
             aria-label="Zoom in"
             title="Zoom in"
-            className="rounded-lg border border-border bg-space/75 p-2 text-muted backdrop-blur transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-panel text-muted transition hover:border-border-strong hover:bg-hover hover:text-text"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -369,7 +372,7 @@ export default function MoonViewer({
             onClick={() => handleZoom(-1)}
             aria-label="Zoom out"
             title="Zoom out"
-            className="rounded-lg border border-border bg-space/75 p-2 text-muted backdrop-blur transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-panel text-muted transition hover:border-border-strong hover:bg-hover hover:text-text"
           >
             <Minus className="h-4 w-4" />
           </button>
@@ -378,22 +381,25 @@ export default function MoonViewer({
             onClick={handleReset}
             aria-label="Reset to global view"
             title="Reset to global view"
-            className="rounded-lg border border-border bg-space/75 p-2 text-muted backdrop-blur transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-panel text-muted transition hover:border-border-strong hover:bg-hover hover:text-text"
           >
             <RotateCcw className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-end justify-between gap-2">
-        <div className="rounded-md border border-border bg-space/75 px-3 py-1.5 text-xs text-muted backdrop-blur">
+      <div
+        className="pointer-events-none absolute bottom-3 flex flex-wrap items-end justify-between gap-2"
+        style={{ left: hudInsetLeft, right: hudInsetRight }}
+      >
+        <div className="rounded-[2px] border border-border bg-space/80 px-3 py-2 text-xs text-muted">
           {caption ?? 'Drag to rotate · Scroll to zoom · Select a marker to inspect'}
         </div>
         <a
           href="https://svs.gsfc.nasa.gov/4720/"
           target="_blank"
           rel="noreferrer"
-          className="pointer-events-auto rounded-md border border-border bg-space/75 px-2.5 py-1.5 text-xs text-muted backdrop-blur transition hover:text-text"
+          className="pointer-events-auto rounded-[2px] border border-border bg-panel px-2.5 py-2 text-xs text-muted transition hover:border-border-strong hover:text-text"
         >
           Texture: NASA SVS CGI Moon Kit · LROC/LOLA
         </a>

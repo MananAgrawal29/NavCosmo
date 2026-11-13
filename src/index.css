@@ -1,15 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-space: #070B14;
-  --color-panel: #101827;
-  --color-card: #141F30;
-  --color-accent: #66B8FF;
-  --color-accent2: #45E0D0;
-  --color-text: #EAF0F8;
-  --color-muted: #9AA8BE;
-  --color-border: #22304A;
-  --font-sans: "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+  /* Monochrome instrument system */
+  --color-space: #08090B; /* background */
+  --color-panel: #111214; /* primary surface */
+  --color-card: #191A1D; /* raised surface */
+  --color-raised: #191A1D; /* raised surface */
+  --color-hover: #222327; /* hover surface */
+
+  --color-border: #292A2E;
+  --color-border-strong: #393A40;
+
+  --color-text: #F2F2F3;
+  --color-muted: #A1A1AA;
+  --color-faint: #71717A;
+
+  --color-accent: #E5E5E5; /* neutral accent / primary action */
+  --color-on-accent: #08090B;
+
+  /* Scientific semantics only — never chrome */
+  --color-solar: #E3B56A;
+  --color-warning: #D48B78;
+
+  --font-sans: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+  --radius-instrument: 2px;
+  --shadow-panel: 0 16px 40px rgb(0 0 0 / 0.28);
+}
+
+:root {
+  color-scheme: dark;
 }
 
 html,
@@ -27,15 +48,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
+.font-display {
+  font-family: var(--font-display);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
-button {
-  font: inherit;
+::selection {
+  background: var(--color-accent);
+  color: var(--color-space);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

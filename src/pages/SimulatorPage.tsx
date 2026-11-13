@@ -29,7 +29,7 @@ export default function SimulatorPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-accent">
+          <p className="text-xs text-muted">
             Lunar illumination lab
           </p>
           <h1 className="mt-2 text-3xl font-bold text-text">Sunlight Simulator</h1>
@@ -41,13 +41,13 @@ export default function SimulatorPage() {
         <div className="flex flex-wrap gap-2">
           <Link
             to={`/analysis?site=${selected.id}`}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[2px] border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-border-strong hover:bg-hover"
           >
             Site details
           </Link>
           <Link
             to={`/workspace?site=${selected.id}&mode=global`}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[2px] border border-border bg-card px-4 py-2.5 text-sm text-text transition hover:border-border-strong hover:bg-hover"
           >
             <ArrowLeft className="h-4 w-4" />
             Mission Workspace
@@ -63,8 +63,8 @@ export default function SimulatorPage() {
             onClick={() => selectSite(site.id)}
             className={`rounded-xl border px-4 py-2 text-sm transition ${
               site.id === selected.id
-                ? 'border-accent bg-accent/15 text-accent'
-                : 'border-border bg-card text-muted hover:border-accent/30 hover:text-text'
+                ? 'border-border-strong bg-hover text-text'
+                : 'border-border bg-card text-muted hover:border-border-strong hover:bg-hover hover:text-text'
             }`}
           >
             {site.name}
@@ -125,7 +125,7 @@ export default function SimulatorPage() {
               </div>
               <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
                 <span className="text-muted">Relative solar availability</span>
-                <span className="font-mono text-accent2">
+                <span className="font-mono text-solar">
                   {simulation.solarAvailability.toFixed(0)}%
                 </span>
               </div>
@@ -134,8 +134,8 @@ export default function SimulatorPage() {
                 <span className="text-right text-text">{simulation.shadowCondition}</span>
               </div>
             </div>
-            <div className="mt-4 flex items-center gap-2 rounded-lg border border-dashed border-accent/30 bg-panel p-3 text-xs leading-5 text-muted">
-              <Sun className="h-4 w-4 shrink-0 text-amber-200" />
+            <div className="mt-4 flex items-center gap-2 rounded-[2px] border border-border border-l-2 border-l-warning bg-panel p-3 text-xs leading-5 text-muted">
+              <Sun className="h-4 w-4 shrink-0 text-solar" />
               Relative availability is derived from Sun elevation and the illustrative lit-terrain
               fraction. It is not a power measurement in watts.
             </div>

@@ -14,11 +14,11 @@ export default function OverviewPage() {
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col justify-center">
-          <p className="text-sm font-medium text-accent">NASA Space Apps Challenge 2026</p>
+          <p className="text-sm font-medium text-muted">NASA Space Apps Challenge 2026</p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-text md:text-5xl">
             NavCosmo
           </h1>
-          <p className="mt-2 text-xl text-accent2">Explore. Analyze. Navigate the Moon.</p>
+          <p className="mt-2 text-xl text-muted">Explore. Analyze. Navigate the Moon.</p>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted">
             NavCosmo is an interactive lunar landing-site exploration platform. Examine candidate
             south-pole locations, inspect illustrative terrain and sunlight, and compare mission
@@ -27,14 +27,14 @@ export default function OverviewPage() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
               to="/workspace"
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-space transition hover:bg-accent/90"
+              className="inline-flex items-center gap-2 rounded-[2px] bg-accent px-5 py-3 text-sm font-semibold text-on-accent transition hover:bg-accent/90"
             >
               Open Mission Workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/workspace?mode=compare"
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold text-text transition hover:border-accent/40"
+              className="inline-flex items-center gap-2 rounded-[2px] border border-border bg-card px-5 py-3 text-sm font-semibold text-text transition hover:border-border-strong hover:bg-hover"
             >
               Compare Sites
             </Link>
@@ -93,23 +93,23 @@ export default function OverviewPage() {
           <SectionHeader title="Mission Information" subtitle="Current unified workspace scope." />
           <div className="space-y-3 text-sm text-muted">
             <div className="flex items-start gap-3">
-              <Satellite className="mt-0.5 h-4 w-4 text-accent" />
+              <Satellite className="mt-0.5 h-4 w-4 text-muted" />
               <p>Client-side prototype with no backend, authentication, or database.</p>
             </div>
             <div className="flex items-start gap-3">
-              <Telescope className="mt-0.5 h-4 w-4 text-accent" />
+              <Telescope className="mt-0.5 h-4 w-4 text-muted" />
               <p>Site terrain and solar readouts are illustrative; global lunar imagery is attributed NASA data.</p>
             </div>
             <div className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 text-accent" />
+              <MapPin className="mt-0.5 h-4 w-4 text-muted" />
               <p>Global Moon, terrain, sunlight, and site comparison modes are available in the mission workspace.</p>
             </div>
           </div>
           <div className="mt-5 grid gap-2">
-            <Link to="/workspace" className="rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/40">
+            <Link to="/workspace" className="rounded-[2px] border border-border px-3 py-2 text-sm text-text transition hover:border-border-strong hover:bg-hover">
               Open Mission Workspace
             </Link>
-            <Link to="/analysis" className="rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/40">
+            <Link to="/analysis" className="rounded-[2px] border border-border px-3 py-2 text-sm text-text transition hover:border-border-strong hover:bg-hover">
               Review Site Analysis
             </Link>
           </div>
