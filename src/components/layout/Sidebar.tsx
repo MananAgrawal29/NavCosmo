@@ -56,7 +56,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
         </nav>
         <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted">NASA Space Apps Challenge 2026</p>
-          <p className="mt-1 text-sm text-text">P01 interactive Moon</p>
+          <p className="mt-1 text-sm text-text">P02 site exploration</p>
         </div>
       </aside>
     </>

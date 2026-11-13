@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { RotateCcw } from 'lucide-react'
 import MoonViewer from '../components/common/MoonViewer'
 import { Card, SectionHeader } from '../components/common/Card'
@@ -6,9 +7,14 @@ import SiteCard from '../components/common/SiteCard'
 import { lunarSites, getSiteById } from '../data/lunarSites'
 
 export default function ExplorerPage() {
-  const [selectedId, setSelectedId] = useState(lunarSites[0].id)
+  const [searchParams, setSearchParams] = useSearchParams()
   const [resetSignal, setResetSignal] = useState(0)
-  const selected = getSiteById(selectedId) ?? lunarSites[0]
+  const selected = getSiteById(searchParams.get('site') ?? '') ?? lunarSites[0]
+  const selectedId = selected.id
+
+  const setSelectedId = (siteId: string) => {
+    setSearchParams({ site: siteId }, { replace: true })
+  }
 
   return (
     <div className="space-y-6">
@@ -84,14 +90,22 @@ export default function ExplorerPage() {
             longitude. They are not precise landing-site survey coordinates.
           </div>
 
-          <button
-            type="button"
-            onClick={() => setResetSignal((value) => value + 1)}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Return to global Moon view
-          </button>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              to={`/analysis?site=${selected.id}`}
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-space transition hover:bg-accent/90"
+            >
+              Explore detailed terrain
+            </Link>
+            <button
+              type="button"
+              onClick={() => setResetSignal((value) => value + 1)}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Return to global Moon view
+            </button>
+          </div>
         </Card>
       </div>
     </div>
