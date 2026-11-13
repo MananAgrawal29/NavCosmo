@@ -26,6 +26,10 @@ Moon textures are provided by NASA's Scientific Visualization Studio CGI Moon Ki
 
 The Site Analysis page provides an interactive 3D terrain view with natural, elevation, and slope modes, site-specific scientific context, qualitative suitability indicators, and synchronized site selection through URL query parameters. The terrain surface is procedurally generated and clearly labelled as illustrative; it is not a DEM, hazard map, or NASA measurement.
 
+## P03 Sunlight Simulator
+
+The Sunlight Simulator at `/simulator` uses a simplified 29.53-day sinusoidal solar model to move a directional light and Sun indicator across the illustrative terrain. It includes a time slider, play/pause, reset, speed controls, dynamic shadows, qualitative illumination readouts, and a derived relative solar-availability metric. All outputs are illustrative and are not predictions of actual lunar illumination windows or solar power.
+
 ## Getting Started
 
 Install dependencies:

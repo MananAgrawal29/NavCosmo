@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Globe2, BarChart3, Scale, Moon } from 'lucide-react'
+import { LayoutDashboard, Globe2, BarChart3, Scale, Moon, Sun } from 'lucide-react'
 
 const navItems = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
   { to: '/explorer', label: 'Lunar Explorer', icon: Globe2 },
   { to: '/analysis', label: 'Site Analysis', icon: BarChart3 },
+  { to: '/simulator', label: 'Sunlight Simulator', icon: Sun },
   { to: '/comparison', label: 'Site Comparison', icon: Scale },
 ]
 
@@ -56,7 +57,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
         </nav>
         <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted">NASA Space Apps Challenge 2026</p>
-          <p className="mt-1 text-sm text-text">P02 site exploration</p>
+          <p className="mt-1 text-sm text-text">P03 sunlight simulator</p>
         </div>
       </aside>
     </>

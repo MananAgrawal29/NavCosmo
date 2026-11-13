@@ -1,55 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
 import { RotateCcw } from 'lucide-react'
-
-type TerrainMode = 'natural' | 'elevation' | 'slope'
-
-interface Crater {
-  x: number
-  z: number
-  radius: number
-  depth: number
-}
+import {
+  getTerrainParameters,
+  terrainHeight,
+  type TerrainMode,
+} from '../../utils/terrainModel'
 
 const modeLabels: { id: TerrainMode; label: string; legend: string }[] = [
   { id: 'natural', label: 'Natural', legend: 'Illustrative surface shading' },
   { id: 'elevation', label: 'Elevation', legend: 'Low terrain → high terrain' },
   { id: 'slope', label: 'Slope', legend: 'Gentle → steep terrain' },
 ]
-
-function makeCraters(seed: number): Crater[] {
-  let state = seed
-  const random = () => {
-    state = (state * 1664525 + 1013904223) % 4294967296
-    return state / 4294967296
-  }
-
-  return Array.from({ length: 12 }, () => ({
-    x: (random() - 0.5) * 3.6,
-    z: (random() - 0.5) * 3.6,
-    radius: 0.18 + random() * 0.5,
-    depth: 0.08 + random() * 0.26,
-  }))
-}
-
-function terrainHeight(x: number, z: number, craters: Crater[], seed: number): number {
-  let height = 0.08 * Math.sin(x * 1.8 + seed) * Math.cos(z * 1.55 - seed)
-  height += 0.025 * Math.sin(x * 6.3 - z * 4.8)
-
-  for (const crater of craters) {
-    const distance = Math.hypot(x - crater.x, z - crater.z)
-    if (distance >= crater.radius) continue
-
-    const normalized = distance / crater.radius
-    height -= crater.depth * (1 - normalized * normalized)
-    height += crater.depth * 0.45 * Math.exp(-(((normalized - 0.88) / 0.09) ** 2))
-  }
-
-  return height
-}
 
 function mixColor(from: string, to: string, amount: number): THREE.Color {
   return new THREE.Color(from).lerp(new THREE.Color(to), THREE.MathUtils.clamp(amount, 0, 1))
@@ -72,7 +37,15 @@ function terrainColor(mode: TerrainMode, height: number, normalizedHeight: numbe
   return new THREE.Color(shade * 0.95, shade * 0.92, shade * 0.86)
 }
 
-function TerrainMesh({ siteId, mode }: { siteId: string; mode: TerrainMode }) {
+function TerrainMesh({
+  siteId,
+  mode,
+  shadows,
+}: {
+  siteId: string
+  mode: TerrainMode
+  shadows: boolean
+}) {
   const geometry = useMemo(() => {
     const plane = new THREE.PlaneGeometry(4, 4, 112, 112)
     plane.rotateX(-Math.PI / 2)
@@ -82,8 +55,7 @@ function TerrainMesh({ siteId, mode }: { siteId: string; mode: TerrainMode }) {
   useEffect(() => () => geometry.dispose(), [geometry])
 
   useEffect(() => {
-    const craters = makeCraters(siteId === 'malapert-massif' ? 23 : 11)
-    const seed = siteId === 'malapert-massif' ? 2.4 : 0.8
+    const parameters = getTerrainParameters(siteId)
     const position = geometry.attributes.position
     const heights = new Float32Array(position.count)
     const epsilon = 0.015
@@ -93,7 +65,7 @@ function TerrainMesh({ siteId, mode }: { siteId: string; mode: TerrainMode }) {
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index)
       const z = position.getZ(index)
-      const height = terrainHeight(x, z, craters, seed)
+      const height = terrainHeight(x, z, parameters)
       heights[index] = height
       position.setY(index, height)
       lowest = Math.min(lowest, height)
@@ -109,9 +81,11 @@ function TerrainMesh({ siteId, mode }: { siteId: string; mode: TerrainMode }) {
       const height = heights[index]
       const normalizedHeight = (height - lowest) / range
       const slopeX =
-        terrainHeight(x + epsilon, z, craters, seed) - terrainHeight(x - epsilon, z, craters, seed)
+        terrainHeight(x + epsilon, z, parameters) -
+        terrainHeight(x - epsilon, z, parameters)
       const slopeZ =
-        terrainHeight(x, z + epsilon, craters, seed) - terrainHeight(x, z - epsilon, craters, seed)
+        terrainHeight(x, z + epsilon, parameters) -
+        terrainHeight(x, z - epsilon, parameters)
       const slope = THREE.MathUtils.clamp(Math.hypot(slopeX, slopeZ) / (epsilon * 2), 0, 1.3)
       const color = terrainColor(mode, height, normalizedHeight, slope)
 
@@ -126,16 +100,82 @@ function TerrainMesh({ siteId, mode }: { siteId: string; mode: TerrainMode }) {
   }, [geometry, mode, siteId])
 
   return (
-    <mesh geometry={geometry}>
+    <mesh geometry={geometry} castShadow={shadows} receiveShadow={shadows}>
       <meshStandardMaterial vertexColors roughness={0.96} metalness={0} />
     </mesh>
   )
 }
 
-export default function TerrainViewer({ siteId, siteName }: { siteId: string; siteName: string }) {
+function SunIndicator({ direction }: { direction: [number, number, number] }) {
+  const position = useMemo(
+    () => new THREE.Vector3(...direction).normalize().multiplyScalar(5.2),
+    [direction],
+  )
+
+  return (
+    <group position={position}>
+      <mesh>
+        <sphereGeometry args={[0.16, 16, 16]} />
+        <meshBasicMaterial color="#FFE7A3" />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[0.3, 16, 16]} />
+        <meshBasicMaterial color="#FDE68A" transparent opacity={0.16} depthWrite={false} />
+      </mesh>
+    </group>
+  )
+}
+
+function ShadowUpdater({
+  enabled,
+  sunDirection,
+}: {
+  enabled: boolean
+  sunDirection?: [number, number, number]
+}) {
+  const { gl } = useThree()
+
+  useEffect(() => {
+    if (!enabled) return
+    gl.shadowMap.autoUpdate = false
+    gl.shadowMap.needsUpdate = true
+    return () => {
+      gl.shadowMap.autoUpdate = true
+    }
+  }, [enabled, gl, sunDirection])
+
+  return null
+}
+
+interface TerrainViewerProps {
+  siteId: string
+  siteName: string
+  sunDirection?: [number, number, number]
+  sunIntensity?: number
+  ambientIntensity?: number
+  shadows?: boolean
+}
+
+export default function TerrainViewer({
+  siteId,
+  siteName,
+  sunDirection,
+  sunIntensity = 2.2,
+  ambientIntensity = 0.42,
+  shadows = false,
+}: TerrainViewerProps) {
   const [mode, setMode] = useState<TerrainMode>('natural')
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
   const activeMode = modeLabels.find((item) => item.id === mode) ?? modeLabels[0]
+  const lightPosition: [number, number, number] = sunDirection
+    ? [sunDirection[0] * 8, sunDirection[1] * 8, sunDirection[2] * 8]
+    : [4, 6, 3]
+  const sunElevation = sunDirection
+    ? THREE.MathUtils.radToDeg(Math.asin(THREE.MathUtils.clamp(sunDirection[1], -1, 1)))
+    : null
+  const sunAzimuth = sunDirection
+    ? (THREE.MathUtils.radToDeg(Math.atan2(sunDirection[2], sunDirection[0])) + 360) % 360
+    : null
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-panel">
@@ -146,9 +186,24 @@ export default function TerrainViewer({ siteId, siteName }: { siteId: string; si
           gl={{ antialias: true, powerPreference: 'high-performance' }}
         >
           <color attach="background" args={['#070B14']} />
-          <ambientLight intensity={0.42} />
-          <directionalLight position={[4, 6, 3]} intensity={2.2} />
-          <TerrainMesh siteId={siteId} mode={mode} />
+          <ambientLight intensity={ambientIntensity} />
+          <directionalLight
+            position={lightPosition}
+            intensity={sunIntensity}
+            castShadow={shadows}
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+            shadow-camera-left={-3.2}
+            shadow-camera-right={3.2}
+            shadow-camera-top={3.2}
+            shadow-camera-bottom={-3.2}
+            shadow-camera-near={1}
+            shadow-camera-far={20}
+            shadow-bias={-0.0004}
+          />
+          <TerrainMesh siteId={siteId} mode={mode} shadows={shadows} />
+          {sunDirection ? <SunIndicator direction={sunDirection} /> : null}
+          <ShadowUpdater enabled={shadows} sunDirection={sunDirection} />
           <OrbitControls
             ref={controlsRef}
             makeDefault
@@ -189,6 +244,23 @@ export default function TerrainViewer({ siteId, siteName }: { siteId: string; si
           <RotateCcw className="h-4 w-4" />
         </button>
       </div>
+
+      {sunDirection && sunElevation !== null && sunAzimuth !== null ? (
+        <div className="pointer-events-none absolute left-3 top-[64px] flex items-center gap-2 rounded-lg border border-amber-300/30 bg-space/80 px-2.5 py-1.5 text-[10px] text-amber-100/90 backdrop-blur">
+          <span className="relative block h-5 w-5 rounded-full border border-amber-300/40">
+            <span
+              className="absolute left-1/2 top-1/2 h-px w-2 origin-left bg-amber-200"
+              style={{ transform: `rotate(${sunAzimuth}deg)` }}
+            />
+            <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200" />
+          </span>
+          <span>Sun</span>
+          <span className="font-mono">
+            {sunAzimuth.toFixed(0)}° AZ · {sunElevation >= 0 ? '+' : ''}
+            {sunElevation.toFixed(1)}° EL
+          </span>
+        </div>
+      ) : null}
 
       <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-end justify-between gap-2">
         <div className="rounded-md border border-border bg-space/80 px-3 py-1.5 text-xs text-muted backdrop-blur">

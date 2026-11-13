@@ -3,6 +3,7 @@ import Layout from './components/layout/Layout'
 import OverviewPage from './pages/OverviewPage'
 import ExplorerPage from './pages/ExplorerPage'
 import AnalysisPage from './pages/AnalysisPage'
+import SimulatorPage from './pages/SimulatorPage'
 import ComparisonPage from './pages/ComparisonPage'
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
           <Route path="/" element={<OverviewPage />} />
           <Route path="/explorer" element={<ExplorerPage />} />
           <Route path="/analysis" element={<AnalysisPage />} />
+          <Route path="/simulator" element={<SimulatorPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
         </Routes>
       </Layout>
