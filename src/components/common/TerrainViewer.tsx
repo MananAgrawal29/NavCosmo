@@ -49,15 +49,24 @@ function TerrainMesh({
   const geometry = useMemo(() => {
     const plane = new THREE.PlaneGeometry(4, 4, 112, 112)
     plane.rotateX(-Math.PI / 2)
+    plane.setAttribute(
+      'color',
+      new THREE.BufferAttribute(new Float32Array(plane.attributes.position.count * 3), 3),
+    )
     return plane
   }, [])
+  const heights = useMemo(
+    () => new Float32Array(geometry.attributes.position.count),
+    [geometry],
+  )
 
   useEffect(() => () => geometry.dispose(), [geometry])
 
   useEffect(() => {
     const parameters = getTerrainParameters(siteId)
     const position = geometry.attributes.position
-    const heights = new Float32Array(position.count)
+    const colorAttribute = geometry.getAttribute('color') as THREE.BufferAttribute
+    const colors = colorAttribute.array as Float32Array
     const epsilon = 0.015
     let lowest = Infinity
     let highest = -Infinity
@@ -72,7 +81,6 @@ function TerrainMesh({
       highest = Math.max(highest, height)
     }
 
-    const colors = new Float32Array(position.count * 3)
     const range = Math.max(highest - lowest, 0.001)
 
     for (let index = 0; index < position.count; index += 1) {
@@ -95,9 +103,9 @@ function TerrainMesh({
     }
 
     position.needsUpdate = true
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    colorAttribute.needsUpdate = true
     geometry.computeVertexNormals()
-  }, [geometry, mode, siteId])
+  }, [geometry, heights, mode, siteId])
 
   return (
     <mesh geometry={geometry} castShadow={shadows} receiveShadow={shadows}>

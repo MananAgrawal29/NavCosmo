@@ -147,6 +147,7 @@ export default function SimulatorPage() {
               <li>• Simplified sinusoidal Sun elevation over a 29.53-day lunar solar cycle.</li>
               <li>• Azimuth rotates once per cycle; no lunar ephemeris, libration, or local horizon model.</li>
               <li>• Terrain is procedurally generated and is not a Shackleton or Malapert DEM.</li>
+              <li>• Site-specific maximum Sun elevations (7° Shackleton, 15° Malapert) are illustrative parameters, not measured values.</li>
               <li>• Shadows and illumination fractions are illustrative, not predictive observing windows.</li>
             </ul>
           </Card>

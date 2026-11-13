@@ -21,19 +21,19 @@ export default function OverviewPage() {
           <p className="mt-2 text-xl text-accent2">Explore. Analyze. Navigate the Moon.</p>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted">
             NavCosmo is an interactive lunar landing-site exploration platform. Examine candidate
-            south-pole locations, compare mission considerations, and prepare for future terrain,
-            illumination, and resource analysis.
+            south-pole locations, inspect illustrative terrain and sunlight, and compare mission
+            considerations in one unified workspace.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
-              to="/explorer"
+              to="/workspace"
               className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-space transition hover:bg-accent/90"
             >
-              Enter Lunar Explorer
+              Open Mission Workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              to="/comparison"
+              to="/workspace?mode=compare"
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold text-text transition hover:border-accent/40"
             >
               Compare Sites
@@ -68,7 +68,7 @@ export default function OverviewPage() {
       <section className="grid gap-4 md:grid-cols-3">
         <StatCard label="Candidate Sites" value={String(lunarSites.length)} detail="Shackleton Crater and Malapert Massif" />
         <StatCard label="Selected Site" value={selected.name} detail={selected.region} />
-        <StatCard label="Data Status" value="Illustrative" detail="NASA measurements will be integrated later" />
+        <StatCard label="Data Status" value="Illustrative site layers" detail="NASA global imagery; procedural terrain and simplified solar model" />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
@@ -90,24 +90,24 @@ export default function OverviewPage() {
           </div>
         </Card>
         <Card>
-          <SectionHeader title="Mission Information" subtitle="Current foundation scope: P01." />
+          <SectionHeader title="Mission Information" subtitle="Current unified workspace scope." />
           <div className="space-y-3 text-sm text-muted">
             <div className="flex items-start gap-3">
               <Satellite className="mt-0.5 h-4 w-4 text-accent" />
-              <p>No backend, authentication, or database is used in this foundation build.</p>
+              <p>Client-side prototype with no backend, authentication, or database.</p>
             </div>
             <div className="flex items-start gap-3">
               <Telescope className="mt-0.5 h-4 w-4 text-accent" />
-              <p>Scientific values shown are placeholders and are not authentic NASA observations.</p>
+              <p>Site terrain and solar readouts are illustrative; global lunar imagery is attributed NASA data.</p>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 text-accent" />
-              <p>Detailed terrain analysis, sunlight simulation, and advanced site comparison arrive in later milestones.</p>
+              <p>Global Moon, terrain, sunlight, and site comparison modes are available in the mission workspace.</p>
             </div>
           </div>
           <div className="mt-5 grid gap-2">
-            <Link to="/explorer" className="rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/40">
-              Open Lunar Explorer
+            <Link to="/workspace" className="rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/40">
+              Open Mission Workspace
             </Link>
             <Link to="/analysis" className="rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/40">
               Review Site Analysis

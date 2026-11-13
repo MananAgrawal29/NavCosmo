@@ -17,13 +17,13 @@ const azimuthOffset: Record<string, number> = {
   'malapert-massif': 0.55,
 }
 
-export function useSunlightSimulation(siteId: string) {
+export function useSunlightSimulation(siteId: string, active = true) {
   const [timeFraction, setTimeFraction] = useState(INITIAL_TIME_FRACTION)
   const [playing, setPlaying] = useState(false)
   const [speed, setSpeed] = useState<SimulationSpeed>(1)
 
   useEffect(() => {
-    if (!playing) return
+    if (!playing || !active) return
 
     const timer = window.setInterval(() => {
       setTimeFraction((previous) => {
@@ -33,7 +33,7 @@ export function useSunlightSimulation(siteId: string) {
     }, 100)
 
     return () => window.clearInterval(timer)
-  }, [playing, speed])
+  }, [active, playing, speed])
 
   const simulation = useMemo(() => {
     const phase = timeFraction * Math.PI * 2
@@ -60,7 +60,7 @@ export function useSunlightSimulation(siteId: string) {
       timeHours,
       illuminationStatus:
         elevationDeg <= 0
-          ? 'Sun below horizon'
+          ? 'Sun at or below horizon'
           : illuminatedFraction >= 0.72
             ? 'Broadly illuminated'
             : illuminatedFraction >= 0.28

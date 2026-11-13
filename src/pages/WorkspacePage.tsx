@@ -140,7 +140,7 @@ export default function WorkspacePage() {
   const [leftOpen, setLeftOpen] = useState(() => window.innerWidth >= 1024)
   const [rightOpen, setRightOpen] = useState(() => window.innerWidth >= 1024)
   const [viewportMode, setViewportMode] = useState<WorkspaceMode>(mode)
-  const sunlight = useSunlightSimulation(selected.id)
+  const sunlight = useSunlightSimulation(selected.id, mode === 'sunlight')
 
   useEffect(() => {
     if (viewportMode === mode) return
@@ -148,6 +148,7 @@ export default function WorkspacePage() {
       (viewportMode === 'global' || viewportMode === 'compare') &&
       (mode === 'terrain' || mode === 'sunlight')
     const nextMode = entering3D && mode === 'sunlight' ? 'terrain' : mode
+    // Let the previous canvas unmount before mounting another WebGL surface.
     const timer = window.setTimeout(() => setViewportMode(nextMode), entering3D ? 60 : 80)
     return () => window.clearTimeout(timer)
   }, [mode, viewportMode])
@@ -247,9 +248,11 @@ export default function WorkspacePage() {
             className="h-full rounded-none border-0"
             sunDirection={mode === 'sunlight' ? sunlight.simulation.sunDirection : undefined}
             sunIntensity={
-              mode === 'sunlight' && sunlight.simulation.elevationDeg > 0
-                ? 0.9 +
-                  Math.max(0, Math.sin(THREE.MathUtils.degToRad(sunlight.simulation.elevationDeg))) * 1.5
+              mode === 'sunlight'
+                ? sunlight.simulation.elevationDeg > 0
+                  ? 0.9 +
+                    Math.max(0, Math.sin(THREE.MathUtils.degToRad(sunlight.simulation.elevationDeg))) * 1.5
+                  : 0
                 : undefined
             }
             ambientIntensity={mode === 'sunlight' ? (sunlight.simulation.elevationDeg > 0 ? 0.2 : 0.13) : undefined}
@@ -336,7 +339,10 @@ export default function WorkspacePage() {
         ) : null}
 
         {rightOpen ? (
-          <aside className="absolute bottom-3 right-3 top-16 z-20 w-80 max-w-[calc(100%-1.5rem)] overflow-y-auto rounded-2xl border border-border bg-panel/95 p-4 shadow-2xl backdrop-blur">
+          <aside
+            className="absolute bottom-3 right-3 top-16 z-20 overflow-y-auto rounded-2xl border border-border bg-panel/95 p-4 shadow-2xl backdrop-blur"
+            style={{ width: 'min(20rem, calc(100% - 1.5rem))' }}
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted">Inspector</p>

@@ -52,8 +52,9 @@ export default function DataSourcesPage() {
             <Sun className="mt-1 h-4 w-4 shrink-0 text-amber-200" />
             <p>
               Sun elevation follows a sinusoidal 29.53-day cycle. Azimuth rotates once per cycle.
-              No lunar ephemeris, libration, or local horizon model is used. Shadows and relative
-              solar availability are illustrative, not predictive.
+              No lunar ephemeris, libration, or local horizon model is used. Site-specific maximum
+              Sun elevations are illustrative parameters, and shadows and relative solar
+              availability are illustrative, not predictive.
             </p>
           </div>
         </Card>

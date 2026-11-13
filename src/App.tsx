@@ -23,6 +23,7 @@ export default function App() {
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/simulator" element={<SimulatorPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
+          <Route path="*" element={<Navigate to="/workspace" replace />} />
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -5,7 +5,7 @@ export const lunarSites: LunarSite[] = [
     id: 'shackleton-crater',
     name: 'Shackleton Crater',
     description:
-      'A permanently shadowed crater near the lunar south pole, studied for its cold-trap environment and possible water-ice relevance.',
+      'A south-pole crater containing permanently shadowed regions, studied for its cold-trap environment and possible water-ice relevance.',
     latitude: -89.9,
     longitude: 0.0,
     region: 'Lunar south-pole region',
@@ -27,7 +27,7 @@ export const lunarSites: LunarSite[] = [
     name: 'Malapert Massif',
     description:
       'An elevated south-pole massif considered for its illumination potential and possible communications advantages.',
-    latitude: -85.0,
+    latitude: -86.0,
     longitude: 0.0,
     region: 'Lunar south-pole region',
     scientificSignificance:

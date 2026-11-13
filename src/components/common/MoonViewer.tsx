@@ -272,6 +272,13 @@ export default function MoonViewer({
   const [cameraTarget, setCameraTarget] = useState<THREE.Vector3 | null>(null)
   const [zoomRequest, setZoomRequest] = useState<{ id: number; direction: 1 | -1 } | null>(null)
 
+  useEffect(
+    () => () => {
+      document.body.style.cursor = 'auto'
+    },
+    [],
+  )
+
   const focusSite = useCallback((site: LunarSite) => {
     const normal = latLonToVector3(site.latitude, site.longitude, 1).normalize()
     setCameraTarget(normal.multiplyScalar(FOCUS_DISTANCE))
