@@ -27,8 +27,8 @@ export const lunarSites: LunarSite[] = [
     name: 'Malapert Massif',
     description:
       'An elevated south-pole massif considered for its illumination potential and possible communications advantages.',
-    latitude: -85.5,
-    longitude: -3.4,
+    latitude: -85.0,
+    longitude: 0.0,
     region: 'Lunar south-pole region',
     scientificSignificance:
       'Useful for studying long-duration illumination, surface elevation, and south-pole mission logistics.',

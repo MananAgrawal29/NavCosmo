@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { RotateCcw } from 'lucide-react'
 import MoonViewer from '../components/common/MoonViewer'
 import { Card, SectionHeader } from '../components/common/Card'
 import SiteCard from '../components/common/SiteCard'
@@ -6,23 +7,33 @@ import { lunarSites, getSiteById } from '../data/lunarSites'
 
 export default function ExplorerPage() {
   const [selectedId, setSelectedId] = useState(lunarSites[0].id)
+  const [resetSignal, setResetSignal] = useState(0)
   const selected = getSiteById(selectedId) ?? lunarSites[0]
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-text">Lunar Explorer</h1>
-        <p className="mt-2 text-muted">
-          A large interactive 3D Moon will be integrated here in P01. This foundation provides the
-          reserved visualization area and site-selection workflow.
+        <p className="mt-2 max-w-3xl text-muted">
+          Drag to rotate the Moon, scroll to zoom, and select a candidate marker to inspect its
+          context. Marker coordinates are approximate candidates, not verified landing sites.
         </p>
       </div>
 
-      <MoonViewer height="520px" caption="Reserved 3D Moon viewport. Authentic terrain and sunlight simulation are not implemented yet." />
+      <MoonViewer
+        height="clamp(380px, 48vw, 560px)"
+        selectedSiteId={selectedId}
+        onSiteSelect={setSelectedId}
+        resetSignal={resetSignal}
+        caption="Drag to rotate · Scroll to zoom · Select a marker"
+      />
 
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <SectionHeader title="Select a Candidate Site" subtitle="Choose a location to inspect its mission context." />
+          <SectionHeader
+            title="Select a Candidate Site"
+            subtitle="Choose a location to inspect its approximate surface position and mission context."
+          />
           <div className="space-y-4">
             {lunarSites.map((site) => (
               <SiteCard
@@ -34,18 +45,29 @@ export default function ExplorerPage() {
             ))}
           </div>
         </div>
+
         <Card>
-          <SectionHeader title={selected.name} subtitle={selected.region} />
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <SectionHeader title={selected.name} subtitle={selected.region} />
+            <span className="rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs text-accent">
+              Selected candidate
+            </span>
+          </div>
+
           <dl className="space-y-4 text-sm">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted">Latitude (approx.)</dt>
+                <dd className="mt-1 text-text">{selected.latitude.toFixed(1)}°</dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-muted">Longitude (approx.)</dt>
+                <dd className="mt-1 text-text">{selected.longitude.toFixed(1)}°</dd>
+              </div>
+            </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-muted">Description</dt>
               <dd className="mt-1 text-text">{selected.description}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-muted">Coordinates (illustrative)</dt>
-              <dd className="mt-1 text-text">
-                {selected.latitude.toFixed(1)}°, {selected.longitude.toFixed(1)}°
-              </dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-muted">Scientific Significance</dt>
@@ -56,6 +78,20 @@ export default function ExplorerPage() {
               <dd className="mt-1 text-muted">{selected.advantages.join(' • ')}</dd>
             </div>
           </dl>
+
+          <div className="mt-5 rounded-lg border border-dashed border-border bg-panel p-3 text-xs leading-5 text-muted">
+            Marker positions are approximate candidate coordinates derived from latitude and
+            longitude. They are not precise landing-site survey coordinates.
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setResetSignal((value) => value + 1)}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-text transition hover:border-accent/50 hover:text-accent"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Return to global Moon view
+          </button>
         </Card>
       </div>
     </div>

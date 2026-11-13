@@ -40,7 +40,12 @@ export default function OverviewPage() {
             </Link>
           </div>
         </div>
-        <MoonViewer height="360px" caption="Illustrative Moon preview. Authentic datasets arrive in P01." />
+        <MoonViewer
+          height="clamp(320px, 34vw, 360px)"
+          selectedSiteId={selectedId}
+          onSiteSelect={setSelectedId}
+          caption="Interactive south-pole view · Drag to rotate · Scroll to zoom"
+        />
       </section>
 
       <section>
@@ -74,18 +79,18 @@ export default function OverviewPage() {
             <p className="text-muted">{selected.scientificSignificance}</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <p className="text-xs uppercase tracking-wide text-muted">Latitude</p>
+                <p className="text-xs uppercase tracking-wide text-muted">Latitude (approx.)</p>
                 <p className="mt-1 text-text">{selected.latitude.toFixed(1)}°</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-muted">Longitude</p>
+                <p className="text-xs uppercase tracking-wide text-muted">Longitude (approx.)</p>
                 <p className="mt-1 text-text">{selected.longitude.toFixed(1)}°</p>
               </div>
             </div>
           </div>
         </Card>
         <Card>
-          <SectionHeader title="Mission Information" subtitle="Foundation scope for P00." />
+          <SectionHeader title="Mission Information" subtitle="Current foundation scope: P01." />
           <div className="space-y-3 text-sm text-muted">
             <div className="flex items-start gap-3">
               <Satellite className="mt-0.5 h-4 w-4 text-accent" />
@@ -97,7 +102,7 @@ export default function OverviewPage() {
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 text-accent" />
-              <p>Interactive terrain, illumination simulation, and site comparison arrive in later milestones.</p>
+              <p>Detailed terrain analysis, sunlight simulation, and advanced site comparison arrive in later milestones.</p>
             </div>
           </div>
           <div className="mt-5 grid gap-2">
