@@ -174,6 +174,7 @@ export default function WorkspacePage() {
   const setSite = (siteId: string) => {
     updateParams({ site: siteId, mode })
     setRightOpen(true)
+    if (window.innerWidth < 768) setLeftOpen(false)
   }
 
   const toggleLeftPanel = () => {
@@ -196,7 +197,7 @@ export default function WorkspacePage() {
   }`
 
   return (
-    <div className="relative flex min-h-[calc(100dvh-6.375rem)] flex-col overflow-hidden bg-space lg:h-[calc(100dvh-6.375rem)]">
+    <div className="relative flex min-h-[calc(100dvh-6.375rem-env(safe-area-inset-top))] flex-col overflow-hidden bg-space lg:h-[calc(100dvh-6.375rem-env(safe-area-inset-top))]">
       <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-border bg-panel px-1.5 sm:px-2">
         <div className="flex min-w-0 items-center gap-0.5">
           {modes.map((item) => {
@@ -222,7 +223,7 @@ export default function WorkspacePage() {
           })}
         </div>
 
-        <div className="flex shrink-0 items-center gap-1 border-l border-border pl-1.5">
+        <div className="hidden shrink-0 items-center gap-1 border-l border-border pl-1.5 md:flex">
           <button
             type="button"
             onClick={toggleLeftPanel}
@@ -302,8 +303,9 @@ export default function WorkspacePage() {
         {leftOpen ? (
           <aside
             id="site-rail"
-            className="absolute inset-x-3 bottom-3 top-3 z-20 overflow-y-auto overscroll-contain rounded-[2px] border border-border bg-panel p-4 shadow-[var(--shadow-panel)] md:inset-x-auto md:left-3 md:w-[17rem]"
+            className="absolute bottom-14 left-0 right-0 top-auto z-20 max-h-[calc(60dvh-3.5rem-env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain rounded-t-[2px] border-t border-border bg-panel p-4 shadow-[var(--shadow-panel)] md:bottom-3 md:left-3 md:right-auto md:top-3 md:max-h-none md:w-[17rem] md:rounded-[2px] md:border"
           >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong md:hidden" />
             <p className="text-xs text-muted">Candidate sites</p>
             <div className="mt-3 space-y-2">
               {lunarSites.map((site) => (
@@ -352,8 +354,9 @@ export default function WorkspacePage() {
         {rightOpen ? (
           <aside
             id="site-inspector"
-            className="absolute inset-x-3 bottom-3 top-3 z-20 overflow-y-auto overscroll-contain rounded-[2px] border border-border bg-panel p-4 shadow-[var(--shadow-panel)] md:inset-x-auto md:right-3 md:w-80"
+            className="absolute bottom-14 left-0 right-0 top-auto z-20 max-h-[calc(60dvh-3.5rem-env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain rounded-t-[2px] border-t border-border bg-panel p-4 shadow-[var(--shadow-panel)] md:bottom-3 md:right-3 md:left-auto md:top-3 md:max-h-none md:w-80 md:rounded-[2px] md:border"
           >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong md:hidden" />
             <div>
               <p className="text-xs text-muted">Selected site</p>
               <h2 className="mt-1 font-display text-[1.75rem] font-normal leading-tight text-text">{selected.name}</h2>
@@ -431,6 +434,32 @@ export default function WorkspacePage() {
               Solar outputs are simplified estimates, not predictive illumination windows.
             </p>
           </aside>
+        ) : null}
+
+        {wideLayout === false ? (
+          <div className="absolute bottom-0 left-0 right-0 z-20 flex h-14 items-stretch border-t border-border bg-panel pb-[env(safe-area-inset-bottom)] md:hidden">
+            <button
+              type="button"
+              onClick={toggleLeftPanel}
+              aria-label={leftOpen ? 'Hide sites' : 'Show sites'}
+              aria-expanded={leftOpen}
+              className="flex flex-1 items-center gap-2 px-3 text-left transition hover:bg-hover"
+            >
+              <PanelLeft className="h-4 w-4 shrink-0 text-muted" />
+              <span className="min-w-0 flex-1 truncate text-sm text-text">{selected.name}</span>
+            </button>
+            <span aria-hidden="true" className="w-px bg-border" />
+            <button
+              type="button"
+              onClick={toggleRightPanel}
+              aria-label={rightOpen ? 'Hide details' : 'Show details'}
+              aria-expanded={rightOpen}
+              className="flex flex-1 items-center justify-end gap-2 px-3 text-right transition hover:bg-hover"
+            >
+              <span className="min-w-0 flex-1 truncate text-sm text-muted">Site details</span>
+              <PanelRight className="h-4 w-4 shrink-0 text-muted" />
+            </button>
+          </div>
         ) : null}
       </div>
 

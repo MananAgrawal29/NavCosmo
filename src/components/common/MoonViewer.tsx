@@ -389,7 +389,7 @@ export default function MoonViewer({
       </div>
 
       <div
-        className="pointer-events-none absolute bottom-3 flex flex-wrap items-end justify-between gap-2"
+        className="pointer-events-none absolute bottom-14 flex flex-wrap items-end justify-between gap-2 md:bottom-3"
         style={{ left: hudInsetLeft, right: hudInsetRight }}
       >
         <div className="rounded-[2px] border border-border bg-space/80 px-3 py-2 text-xs text-muted">

@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-space text-text">
-      <header className="sticky top-0 z-30 border-b border-border bg-panel">
+      <header className="sticky top-0 z-30 border-b border-border bg-panel pt-[env(safe-area-inset-top)]">
         <div className="flex h-14 items-center justify-between gap-3 px-3 md:px-4">
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <Link

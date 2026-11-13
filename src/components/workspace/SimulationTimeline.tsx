@@ -31,7 +31,7 @@ export default function SimulationTimeline({
 }: SimulationTimelineProps) {
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div>
           <p className="text-xs text-muted">Simulation timeline</p>
           <p className={`mt-0.5 tabular-nums text-text ${compact ? 'text-lg' : 'text-xl'}`}>
@@ -39,7 +39,7 @@ export default function SimulationTimeline({
             <span className="ml-2 text-sm text-muted">/ {LUNAR_CYCLE_HOURS} h</span>
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setPlaying(!playing)}
@@ -85,7 +85,7 @@ export default function SimulationTimeline({
           value={Math.round(timeFraction * 1000)}
           onChange={(event) => setTimeFraction(Number(event.target.value) / 1000)}
           aria-label="Simulation time"
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer touch-manipulation"
           style={{ accentColor: 'var(--color-accent)' }}
         />
         <div className="mt-1 flex justify-between text-xs text-muted">
